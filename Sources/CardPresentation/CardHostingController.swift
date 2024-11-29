@@ -42,6 +42,13 @@ public final class CardHostingController<Content: View>: UIViewController {
         
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
+        
+        registerForTraitChanges(
+            [UITraitVerticalSizeClass.self],
+            handler: { [unowned self] (traitEnvironment: Self, previousTraitCollection) in
+                updateViewConstraints()
+            }
+        )
     }
     
     public override func updateViewConstraints() {
@@ -55,14 +62,6 @@ public final class CardHostingController<Content: View>: UIViewController {
         default:
             topConstraint?.isActive = true
             bottomConstraint?.isActive = false
-        }
-    }
-    
-    // iOS 17
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
-            updateViewConstraints()
         }
     }
     
