@@ -6,8 +6,9 @@ struct CardContentView<Content: View>: View {
     var body: some View {
         content
             .padding()
-            .background(Color.white)
-            .cornerRadius(36)
+            .background(.background.secondary)
+            .cornerRadius(24)
             .padding(.horizontal, 10)
+            .frame(maxWidth: 440)
     }
 }

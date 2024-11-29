@@ -7,16 +7,26 @@ let package = Package(
     name: "CardPresentation",
     platforms: [.iOS(.v17)],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "CardPresentation",
-            targets: ["CardPresentation"]),
+            targets: [
+                "CardPresentation",
+            ]
+        ),
+        .library(
+            name: "CardPresentationBuiltins",
+            targets: [
+                "CardPresentationBuiltins",
+            ]
+        ),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "CardPresentation"),
+            name: "CardPresentation"
+        ),
+        .target(
+            name: "CardPresentationBuiltins"
+        ),
         .testTarget(
             name: "CardPresentationTests",
             dependencies: ["CardPresentation"]

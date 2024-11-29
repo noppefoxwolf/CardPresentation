@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 import CardPresentation
+import CardPresentationBuiltins
 
 final class ViewController: UIViewController {
     let label: UILabel = UILabel()
@@ -25,8 +26,8 @@ final class ViewController: UIViewController {
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.centerYAnchor.constraint(
-                equalTo: view.centerYAnchor
+            stackView.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor
             ),
             stackView.leadingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.leadingAnchor
@@ -43,6 +44,42 @@ final class ViewController: UIViewController {
     
     func presentCard() {
         let vc = CardHostingController(rootView: CardContentView())
+        vc.sheetPresentationController?.prefersGrabberVisible = true
         present(vc, animated: true)
+    }
+}
+
+struct CardContentView: View {
+    @Environment(\.dismiss)
+    var dismiss
+    
+    var body: some View {
+        MenuCardContentView(
+            title: {
+                Text("Choose a Person")
+            },
+            content: {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Label("apple1", systemImage: "apple.logo")
+                }
+                Button(action: {
+                    dismiss()
+                }) {
+                    Label("apple2", systemImage: "apple.logo")
+                }
+                Button(action: {
+                    dismiss()
+                }) {
+                    Label("apple3", systemImage: "apple.logo")
+                }
+                Button(action: {
+                    dismiss()
+                }) {
+                    Label("apple4", systemImage: "apple.logo")
+                }
+            }
+        )
     }
 }

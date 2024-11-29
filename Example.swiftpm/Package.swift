@@ -41,7 +41,8 @@ let package = Package(
         .executableTarget(
             name: "AppModule",
             dependencies: [
-                .product(name: "CardPresentation", package: "cardpresentation")
+                .product(name: "CardPresentation", package: "cardpresentation"),
+                .product(name: "CardPresentationBuiltins", package: "cardpresentation")
             ],
             path: "."
         )

@@ -3,6 +3,8 @@ import SwiftUI
 
 public final class CardHostingController<Content: View>: UIViewController {
     let contentViewController: UIHostingController<CardContentView<Content>>
+    var topConstraint: NSLayoutConstraint?
+    var bottomConstraint: NSLayoutConstraint?
     
     public init(rootView: Content) {
         let rootView = CardContentView(content: rootView)
@@ -31,15 +33,49 @@ public final class CardHostingController<Content: View>: UIViewController {
         contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(contentViewController.view)
         
+        topConstraint = contentViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+        bottomConstraint = contentViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
-            contentViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             contentViewController.view.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             contentViewController.view.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
         ])
         
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
+    }
+    
+    public override func updateViewConstraints() {
+        super.updateViewConstraints()
+        switch traitCollection.verticalSizeClass {
+        case .compact:
+            topConstraint?.isActive = false
+            bottomConstraint?.isActive = true
+        case .regular:
+            fallthrough
+        default:
+            topConstraint?.isActive = true
+            bottomConstraint?.isActive = false
+        }
+    }
+    
+    // iOS 17
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
+            updateViewConstraints()
+        }
+    }
+    
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
         
+        // Dismiss when tap outside
+        for touch in touches {
+            let hitView = view.hitTest(touch.location(in: view), with: event)
+            if hitView == view {
+                dismiss(animated: true)
+            }
+        }
     }
     
     public override func preferredContentSizeDidChange(forChildContentContainer container: any UIContentContainer) {
